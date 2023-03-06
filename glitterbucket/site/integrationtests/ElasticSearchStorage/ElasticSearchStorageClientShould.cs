@@ -76,7 +76,7 @@ namespace GlitterBucket.IntegrationTests.ElasticSearchStorage
             var language = "en";
             var version = 1;
 
-            new SitecoreWebHookModel
+            return new SitecoreWebHookModel
             {
                 EventName = "Test",
                 Item = new ItemModel
@@ -98,7 +98,7 @@ namespace GlitterBucket.IntegrationTests.ElasticSearchStorage
                     }
 
                 }
-            }
+            };
         }
     }
 }

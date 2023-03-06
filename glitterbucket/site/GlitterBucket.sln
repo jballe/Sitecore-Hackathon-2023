@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlitterBucket", "code\GlitterBucket.csproj", "{75241F3B-7575-41C9-A983-8358614DF8DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlitterBucket.IntegrationTests", "integrationtests\GlitterBucket.IntegrationTests.csproj", "{364860BD-9367-413B-B4FE-4082C4FFA418}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{75241F3B-7575-41C9-A983-8358614DF8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75241F3B-7575-41C9-A983-8358614DF8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75241F3B-7575-41C9-A983-8358614DF8DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{364860BD-9367-413B-B4FE-4082C4FFA418}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{364860BD-9367-413B-B4FE-4082C4FFA418}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{364860BD-9367-413B-B4FE-4082C4FFA418}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{364860BD-9367-413B-B4FE-4082C4FFA418}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

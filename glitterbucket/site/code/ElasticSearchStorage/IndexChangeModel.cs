@@ -1,4 +1,4 @@
-﻿using Nest;
+using Nest;
 
 namespace GlitterBucket.ElasticSearchStorage
 {
@@ -16,7 +16,6 @@ namespace GlitterBucket.ElasticSearchStorage
         [Keyword]
         public Guid ParentId { get; init; }
         
-        [Keyword]
         public int Version { get; set; }
         
         [Keyword]

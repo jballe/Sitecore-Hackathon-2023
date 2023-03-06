@@ -8,6 +8,7 @@ WORKDIR /source
 # copy csproj and restore as distinct layers
 COPY *.sln .
 COPY code/*.csproj ./code/
+COPY integrationtests/*.csproj ./integrationtests/
 RUN dotnet restore
 
 # copy everything else and build app

@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using GlitterBucket.Shared;
 using Nest;
 
@@ -15,7 +15,7 @@ namespace GlitterBucket.ElasticSearchStorage
 
         private const string IndexPrefix = "glitteraudit";
 
-        private static readonly Guid FieldIdEditor = new Guid("badd9cf9-53e0-4d0c-bcc0-2d784c282f6a");
+        public static readonly Guid FieldIdEditor = new Guid("badd9cf9-53e0-4d0c-bcc0-2d784c282f6a");
 
         private string IndexName => $"{IndexPrefix}-{DateTime.UtcNow:yyyy.MM}";
 
@@ -63,9 +63,9 @@ namespace GlitterBucket.ElasticSearchStorage
             var result = await _client.SearchAsync<IndexChangeModel>(s =>
                 s
                     .AllIndices()
-                    .Query(q => q.Term(f => f.ItemId, itemId))
-                    .Fields(fl => fl.Fields(f => f.Raw))
+                    .Query(q => q.Term(f => f.ItemId.Suffix("keyword"), itemId.ToString("D")))
                     .Sort(o => o.Descending(f => f.Timestamp))
+                    .Size(10)
                 );
             return result.Hits.Select(hit => hit.Source);
         }
@@ -73,15 +73,18 @@ namespace GlitterBucket.ElasticSearchStorage
         public async Task<IEnumerable<IndexChangeModel>> GetByItem(Guid itemId, string language, int? version)
         {
             var result = await _client.SearchAsync<IndexChangeModel>(s =>
-                s
-                    .AllIndices()
-                    //.Query(query => query.Bool(b => b.Filter(
-                            //q => q.Term(f => f.ItemId, itemId.ToString("D").ToLowerInvariant())
-                            //q => q.Term(f => f.Language, language),
-                            //q => q.Term(f => f.Version, version)
-                             //)))
-                    //.Fields(fl => fl.Fields(f => f.Timestamp, f => f.User, f => f.FieldIds))
-                    //.Sort(o => o.Descending(f => f.Timestamp))
+                s.AllIndices()
+                .Query(query => query
+                    .Bool(b => b
+                        .Filter(
+                                q => q.Term(f => f.ItemId.Suffix("keyword"), itemId.ToString("D")),
+                                q => q.Term(f => f.Language.Suffix("keyword"), language),
+                                q => q.Term(f => f.Version, version)
+                            )
+                        )
+                    )
+                .Fields(fl => fl.Fields(f => f.Timestamp, f => f.User, f => f.FieldIds))
+                .Sort(o => o.Descending(f => f.Timestamp))
             );
             return result.Hits.Select(hit => hit.Source).Where(x => x.ItemId == itemId && x.Language == language && x.Version == version);
         }
@@ -99,12 +102,20 @@ namespace GlitterBucket.ElasticSearchStorage
             return result;
         }
 
+        public async Task RecreateIndex()
+        {
+            var indexName = IndexName;
+            await _client.Indices.DeleteAsync(new DeleteIndexRequest(Indices.Parse((indexName))));
+            await EnsureIndex(indexName);
+        }
+
         private async Task EnsureIndex(string indexName)
         {
-            var response = await _client.Indices.CreateAsync(indexName, s => s
+            var response = await _client.Indices.CreateAsync(indexName, i => i
                 .Settings(se => se
                     .NumberOfReplicas(1)
-                ).Map(m => m.AutoMap()));
+                )
+            );
 
             if (!response.IsValid)
             {

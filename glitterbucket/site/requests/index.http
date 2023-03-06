@@ -1,0 +1,5 @@
+GET https://elasticsearch.localhost/_cat/indices
+
+####
+
+GET https://elasticsearch.localhost/glitteraudit-2023.03/_mapping
